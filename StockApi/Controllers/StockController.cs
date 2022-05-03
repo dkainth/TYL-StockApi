@@ -1,5 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
+using StockApi.Contracts;
+using StockApi.Repository.Models;
+using StockApi.Repository.Repositories;
 
 namespace StockApi.Controllers
 {
@@ -8,19 +11,32 @@ namespace StockApi.Controllers
     public class StockController : ControllerBase
     {
 
-        public StockController()
+        private readonly IStockRepository _stockRepository;
+        private readonly ITransactionRepository _transactionRepository;
+
+        public StockController(IStockRepository stockRepository, ITransactionRepository transactionRepository)
         {
+            _stockRepository = stockRepository;
+            _transactionRepository = transactionRepository;
         }
 
         [HttpGet]
         [Route("stock-price")]
-        public async Task<IActionResult> GetPrice(string symbol)
+        public IActionResult GetPrice(string symbol)
         {
             //validate request
+            if(!TryAndGetStock(symbol, out var stock))
+                return BadRequest("Invalid symbol");
 
-            //add to the repo
+            var prices = _transactionRepository.FindLastPriceByStock(new Stock[] { stock });
 
-            return Ok();
+            var response = new StockPrice
+            {
+                Symbol = symbol,
+                Price = prices.ContainsKey(stock.Symbol) ? prices[stock.Symbol] : 0
+            };
+
+            return Ok(response);
         }
 
         [HttpGet]
@@ -28,8 +44,6 @@ namespace StockApi.Controllers
         public async Task<IActionResult> GetPrices(string[] symbol)
         {
             //validate request
-
-            //add to the repo
 
             return Ok();
         }
@@ -40,9 +54,20 @@ namespace StockApi.Controllers
         {
             //validate request
 
-            //add to the repo
 
             return Ok();
+        }
+
+        private bool TryAndGetStock(string symbol, out Stock? stock)
+        {
+            stock = null;
+
+            if (string.IsNullOrWhiteSpace(symbol))
+                return false;
+
+            stock = _stockRepository.GetBySymbol(symbol);
+
+            return stock != null;
         }
     }
 }
