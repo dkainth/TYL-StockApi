@@ -20,6 +20,9 @@ namespace StockApi.Controllers
             _transactionRepository = transactionRepository;
         }
 
+        //TODO : Validate the request check username and password / token before allowing a transacton to be added
+        //possible the request should be signed too
+        //use ActionFilter so we can choose which endpoints need extra validation / checking
         [HttpPost]
         public async Task<IActionResult> Add(AddTransactionRequest request)
         {

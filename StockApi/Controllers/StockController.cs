@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Routing;
 using StockApi.Contracts;
 using StockApi.Repository.Models;
 using StockApi.Repository.Repositories;
@@ -65,7 +64,7 @@ namespace StockApi.Controllers
         public async Task<IActionResult> GetPrices()
         {
 
-            //TODO : Add method to repo to get all the latest prices
+            //TODO : Add method to the transaction repo to get the latest prices for all stocks
 
             return Ok();
 
@@ -76,6 +75,7 @@ namespace StockApi.Controllers
         {
             stock = null;
 
+            //TODO : enhance the check to see if it is between 3 and 5 chars and move this to a static method inside the Stock model
             if (string.IsNullOrWhiteSpace(symbol))
                 return false;
 
