@@ -28,35 +28,49 @@ namespace StockApi.Controllers
             if(!TryAndGetStock(symbol, out var stock))
                 return BadRequest("Invalid symbol");
 
-            var prices = _transactionRepository.FindLastPriceByStock(new Stock[] { stock });
+            var stockPrices = _transactionRepository.FindLastPriceForStocks(stock);
 
-            var response = new StockPrice
-            {
-                Symbol = symbol,
-                Price = prices.ContainsKey(stock.Symbol) ? prices[stock.Symbol] : 0
-            };
+            var response = stockPrices.Select(sp => new StockPrice { Symbol = sp.Key, Price = sp.Value }).SingleOrDefault();
 
             return Ok(response);
+
         }
 
-        [HttpGet]
+        [HttpPost]
         [Route("stock-prices")]
-        public async Task<IActionResult> GetPrices(string[] symbol)
+        public async Task<IActionResult> GetPrices(string[] symbols)
         {
             //validate request
+            if (symbols == null || symbols.Count() == 0)
+                return BadRequest();
 
-            return Ok();
+            var stocks =new List<Stock>();
+
+            foreach(var s in symbols)
+                if (!TryAndGetStock(s, out var stock))
+                    return BadRequest("Invalid symbol");
+                else
+                    stocks.Add(stock);
+
+
+            var stockPrices = _transactionRepository.FindLastPriceForStocks(stocks.ToArray());
+
+            var response = stockPrices.Select(sp => new StockPrice { Symbol = sp.Key, Price = sp.Value });
+
+            return Ok(response);
         }
 
         [HttpGet]
         [Route("stock-prices-all")]
         public async Task<IActionResult> GetPrices()
         {
-            //validate request
 
+            //TODO : Add method to repo to get all the latest prices
 
             return Ok();
+
         }
+
 
         private bool TryAndGetStock(string symbol, out Stock? stock)
         {

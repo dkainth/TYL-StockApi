@@ -4,7 +4,9 @@ namespace StockApi.Repository.Repositories
 {
     public interface ITransactionRepository
     {
-        Dictionary<string, decimal> FindLastPriceByStock(Stock[] stocks);
+        Dictionary<string, decimal> FindLastPriceForStocks(Stock stock);
+
+        Dictionary<string, decimal> FindLastPriceForStocks(Stock[] stocks);
 
         Task Add(Transaction stockTransaction);
 
