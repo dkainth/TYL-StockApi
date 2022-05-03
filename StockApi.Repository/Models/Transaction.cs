@@ -14,5 +14,19 @@
 
         public Stock Stock { get; init; }
 
+
+        private Transaction()
+        {
+        }
+
+        public Transaction(Stock stock, decimal priceGbp, decimal quantity, DateTime transactionDate, Broker broker) : this()
+        {
+            Stock = stock;
+            PriceGbp = priceGbp;
+            Quantity = quantity;
+            TransactionDate = transactionDate;
+            Broker = broker;
+        }
+
     }
 }

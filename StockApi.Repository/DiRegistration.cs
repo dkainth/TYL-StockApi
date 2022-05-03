@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using StockApi.Repository.Repositories;
 
 namespace StockApi.Repository
 {
@@ -12,6 +13,9 @@ namespace StockApi.Repository
                options => options.UseSqlServer(connectionString)
             );
 
+            services.AddScoped<IBrokerRepository, BrokerRepository>();
+            services.AddScoped<IStockRepository, StockRepository>();
+            services.AddScoped<ITransactionRepository, TransactionRepository>();
         }
     }
 }

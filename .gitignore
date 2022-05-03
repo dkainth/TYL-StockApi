@@ -4,3 +4,5 @@ StockApi/bin/
 StockApi.Repository/bin/
 StockApi.Repository/obj/
 tools/DB/
+StockApi.Tests/bin/
+StockApi.Tests/obj/
