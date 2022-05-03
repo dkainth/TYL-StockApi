@@ -1,0 +1,9 @@
+mssql:
+    image: 'mcr.microsoft.com/mssql/server:2017-CU29-ubuntu-16.04'
+    ports:
+        - '1433:1433'
+    environment:
+        - ACCEPT_EULA=Y
+        - SA_PASSWORD=Password123
+    volumes:
+        - './DB/:/var/opt/mssql/data'

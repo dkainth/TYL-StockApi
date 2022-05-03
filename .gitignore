@@ -1,3 +1,6 @@
 .vs/
 StockApi/obj/
 StockApi/bin/
+StockApi.Repository/bin/
+StockApi.Repository/obj/
+tools/DB/
